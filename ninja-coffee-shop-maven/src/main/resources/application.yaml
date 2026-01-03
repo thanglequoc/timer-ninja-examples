@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: ninja-coffee-shop-maven
