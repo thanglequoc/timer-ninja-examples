@@ -1,6 +1,8 @@
 package io.github.thanglequoc.ninja_coffee_shop_gradle.service;
 
+import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.MaterialStatus;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.OrderRequest;
+import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.RefillMaterialRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Americano;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Cappuccino;
@@ -16,11 +18,12 @@ import org.springframework.stereotype.Service;
 public class CoffeeMachineService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoffeeMachineService.class);
-    private int servingCup = 0;
-    private int coffeeBeans = 0; // number of whole beans packs/units
-    private int coffeePowderServing = 0; // number of powder servings available
-    private int iceServing = 0;
-    private int hotWaterServing = 0;
+    private int servingCup = 10;
+    private int coffeeBeans = 30; // number of whole beans packs/units
+    private int coffeePowderServing = 10; // number of powder servings available
+    private int iceServing = 20;
+    private int hotWaterServing = 20;
+    private int waterServing = 30;
 
     public Beverage makeDrink(int id) {
         return switch (id) {
@@ -120,6 +123,10 @@ public class CoffeeMachineService {
     }
 
     public void heatingWater() {
+        if (waterServing <= 0) {
+            throw new IllegalStateException("No water available");
+        }
+
         LOGGER.info("Heating water...");
         try {
             Thread.sleep(2000);
@@ -128,7 +135,25 @@ public class CoffeeMachineService {
             throw new RuntimeException(e);
         }
         hotWaterServing += 5;
+        waterServing -= 1;
         LOGGER.info("Boiling water complete. Hot water servings: {}", hotWaterServing);
+    }
+
+    public void makeIce() {
+        if (waterServing <= 0) {
+            throw new IllegalStateException("No water available");
+        }
+
+        LOGGER.info("Making ice");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+        iceServing += 5;
+        waterServing -= 1;
+        LOGGER.info("Making ice complete. Ice Serving: {}", iceServing);
     }
 
     // Helper methods to manage machine supplies
@@ -138,37 +163,10 @@ public class CoffeeMachineService {
         LOGGER.info("Added {} coffee beans. Total beans: {}", amount, coffeeBeans);
     }
 
-    // Alias / clearer API for refill
-    public void refillCoffeeBeans(int amount) {
-        addCoffeeBeans(amount);
-    }
-
     public void addServingCups(int amount) {
         if (amount <= 0) return;
         servingCup += amount;
         LOGGER.info("Added {} serving cups. Total cups: {}", amount, servingCup);
-    }
-
-    public void addIceServings(int amount) {
-        if (amount <= 0) return;
-        iceServing += amount;
-        LOGGER.info("Added {} ice servings. Total ice servings: {}", amount, iceServing);
-    }
-
-    // Alias for refill ice
-    public void refillIceServings(int amount) {
-        addIceServings(amount);
-    }
-
-    public void addHotWaterServings(int amount) {
-        if (amount <= 0) return;
-        hotWaterServing += amount;
-        LOGGER.info("Added {} hot water servings. Total hot water servings: {}", amount, hotWaterServing);
-    }
-
-    // Alias for refill hot water
-    public void refillHotWaterServings(int amount) {
-        addHotWaterServings(amount);
     }
 
     // Explicit consumers for flexibility / tests
@@ -190,6 +188,23 @@ public class CoffeeMachineService {
         }
         hotWaterServing -= amount;
         LOGGER.info("Consumed {} hot water servings. Remaining hot water servings: {}", amount, hotWaterServing);
+    }
+
+    public MaterialStatus getMaterialStatus() {
+        MaterialStatus status = new MaterialStatus();
+        status.setCoffeeBeans(coffeeBeans);
+        status.setServingCups(servingCup);
+        status.setIceServings(iceServing);
+        status.setHotWaterServings(hotWaterServing);
+        status.setWaterServings(waterServing);
+        return status;
+    }
+
+    public MaterialStatus refillMaterial(RefillMaterialRequest refillMaterialRequest) {
+        coffeeBeans += refillMaterialRequest.getCoffeeBeans();
+        servingCup += refillMaterialRequest.getServingCups();
+        waterServing += refillMaterialRequest.getWaterServings();
+        return getMaterialStatus();
     }
 
     public int getAvailableBeans() {

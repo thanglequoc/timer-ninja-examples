@@ -16,27 +16,23 @@ public class PaymentService {
     }
 
     /* Simulate pay by transfer. Usually this will involve QR generation, but we keep it simple for the demo */
-    public boolean payByTransfer(String transactionID, String sourceAccount, String receivingAccount, int amount) {
+    public boolean payByTransfer(String transactionID, String receivingAccount, int amount) {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("Paying transaction ID: {} by bank transfer. Source: {}, Target: {}, Amount: {}", transactionID, sourceAccount, receivingAccount, amount);
+        LOGGER.info("Paying transaction ID: {} by bank transfer. Target: {}, Amount: {}", transactionID, receivingAccount, amount);
         return true;
     }
 
-    public boolean payWithCreditCard(String transactionID, String cardNumber, int amount) {
+    public boolean payWithCreditCard(String transactionID, int amount) {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("Paying transaction ID: {} with credit card number {}. Amount: {}", transactionID, cardNumber, amount);
+        LOGGER.info("Paying transaction ID: {} with credit card. Amount: {}", transactionID, amount);
         return true;
     }
-
-
-
-
 }
