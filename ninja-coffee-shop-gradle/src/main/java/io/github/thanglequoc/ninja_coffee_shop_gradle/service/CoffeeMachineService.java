@@ -56,6 +56,9 @@ public class CoffeeMachineService {
 
         // Manage hot water / ice servings
         if (order.isHot()) {
+            if (hotWaterServing <= 0) {
+                heatingWater();
+            }
             consumeHotWaterServings(1);
         } else {
             consumeIceServings(1);
@@ -117,14 +120,15 @@ public class CoffeeMachineService {
     }
 
     public void heatingWater() {
+        LOGGER.info("Heating water...");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
-        LOGGER.info("Boiling water complete");
-
+        hotWaterServing += 5;
+        LOGGER.info("Boiling water complete. Hot water servings: {}", hotWaterServing);
     }
 
     // Helper methods to manage machine supplies
