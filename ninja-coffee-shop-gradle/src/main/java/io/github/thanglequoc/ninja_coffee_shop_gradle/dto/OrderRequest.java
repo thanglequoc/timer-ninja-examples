@@ -1,11 +1,13 @@
 package io.github.thanglequoc.ninja_coffee_shop_gradle.dto;
 
 public class OrderRequest {
+    private String orderID;
     private int itemId;
     private boolean isHot;
     private String beanType;
     private int sweetness;
     private String size;
+    private String customerName;
 
     public int getItemId() {
         return itemId;
@@ -45,5 +47,21 @@ public class OrderRequest {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
     }
 }
