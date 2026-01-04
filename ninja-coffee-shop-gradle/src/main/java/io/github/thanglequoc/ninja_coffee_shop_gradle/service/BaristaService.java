@@ -3,6 +3,7 @@ package io.github.thanglequoc.ninja_coffee_shop_gradle.service;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.OrderRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.PaymentRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.Receipt;
+import io.github.thanglequoc.timerninja.TimerNinjaTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,15 @@ public class BaristaService {
         this.paymentService = paymentService;
     }
 
+    @TimerNinjaTracker(includeArgs = true)
     public OrderRequest placeOrder(OrderRequest orderRequest) {
         if (activeOrder != null) {
             throw new IllegalStateException("Unable to place new order. Processing current order: " + activeOrder.getOrderID());
         }
+
+        String orderID = generateOrderID();
         // Use post-increment so first order id is ORDER-0, then ORDER-1, etc.
-        orderRequest.setOrderID(String.format("ORDER-%d", index++));
+        orderRequest.setOrderID(orderID);
         this.activeOrder = orderRequest;
         LOGGER.info("New order received: {} - Customer: {}", activeOrder.getOrderID(), activeOrder.getCustomerName());
         return activeOrder;
@@ -84,5 +88,18 @@ public class BaristaService {
             throw new IllegalStateException("There is no active order");
         }
         return activeOrder;
+    }
+
+
+    @TimerNinjaTracker
+    private String generateOrderID() {
+        /* Gonna take a bit of time ... */
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return String.format("ORDER-%d", index++);
     }
 }

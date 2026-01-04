@@ -7,6 +7,7 @@ import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Americano;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Cappuccino;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Latte;
+import io.github.thanglequoc.timerninja.TimerNinjaTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CoffeeMachineService {
         };
     }
 
-    // Overload: build a beverage using full OrderRequest details
+    @TimerNinjaTracker(includeArgs = true)
     public Beverage makeDrink(OrderRequest order) {
         // Validate basic supplies
         if (servingCup <= 0) {

@@ -4,6 +4,7 @@ import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.*;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.service.BaristaService;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.service.CoffeeMachineService;
+import io.github.thanglequoc.timerninja.TimerNinjaTracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class BaristaController {
     }
 
     @PostMapping("/brew")
+    @TimerNinjaTracker
     public Beverage makeDrink() {
         OrderRequest currentActiveOrder = baristaService.getActiveOrder();
         return coffeeMachineService.makeDrink(currentActiveOrder);

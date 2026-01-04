@@ -55,4 +55,16 @@ public class OrderRequest {
     public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
+
+    @Override
+    public String toString() {
+        return "OrderRequest{" +
+                "orderID='" + orderID + '\'' +
+                ", itemId=" + itemId +
+                ", isHot=" + isHot +
+                ", sweetness=" + sweetness +
+                ", size='" + size + '\'' +
+                ", customerName='" + customerName + '\'' +
+                '}';
+    }
 }
