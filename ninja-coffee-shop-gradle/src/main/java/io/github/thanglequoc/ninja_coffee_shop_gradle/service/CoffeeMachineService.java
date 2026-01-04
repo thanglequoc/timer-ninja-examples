@@ -86,12 +86,12 @@ public class CoffeeMachineService {
     }
 
     public void grindBeans() {
-        LOGGER.info("Grinding some bean...");
         if (coffeeBeans <= 0) {
             LOGGER.error("Unable to grind any beans - no coffee beans available");
             throw new IllegalStateException("Unable to grind any beans, no beans in the machine");
         }
 
+        LOGGER.info("Grinding some bean to make coffee powders...");
         // Simulate grinding time
         try {
             Thread.sleep(2000);
@@ -114,7 +114,7 @@ public class CoffeeMachineService {
 
         LOGGER.info("Heating water...");
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
@@ -129,7 +129,7 @@ public class CoffeeMachineService {
             throw new IllegalStateException("No water available");
         }
 
-        LOGGER.info("Making ice");
+        LOGGER.info("Making some ice...");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -163,6 +163,13 @@ public class CoffeeMachineService {
     }
 
     public MaterialStatus getMaterialStatus() {
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
         MaterialStatus status = new MaterialStatus();
         status.setCoffeeBeans(coffeeBeans);
         status.setServingCups(servingCup);
@@ -176,6 +183,7 @@ public class CoffeeMachineService {
         coffeeBeans += refillMaterialRequest.getCoffeeBeans();
         servingCup += refillMaterialRequest.getServingCups();
         waterServing += refillMaterialRequest.getWaterServings();
+        LOGGER.info("Refill material completed");
         return getMaterialStatus();
     }
 

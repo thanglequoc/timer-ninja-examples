@@ -3,6 +3,8 @@ package io.github.thanglequoc.ninja_coffee_shop_gradle.service;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.OrderRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.PaymentRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.Receipt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Service
 public class BaristaService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaristaService.class);
     private int index = 0;
     private int totalRevenue;
     private OrderRequest activeOrder;
@@ -31,6 +34,7 @@ public class BaristaService {
         // Use post-increment so first order id is ORDER-0, then ORDER-1, etc.
         orderRequest.setOrderID(String.format("ORDER-%d", index++));
         this.activeOrder = orderRequest;
+        LOGGER.info("New order received: {} - Customer: {}", activeOrder.getOrderID(), activeOrder.getCustomerName());
         return activeOrder;
     }
 
@@ -64,6 +68,7 @@ public class BaristaService {
             this.totalRevenue += paymentRequest.getAmount();
             // Clear active order
             this.activeOrder = null;
+            LOGGER.info("Order {} has been paid successfully: paymentChannel - {}, amount - {} ", activeOrder.getOrderID(), paymentRequest.getPaymentChannel(), paymentRequest.getAmount());
             return receipt;
         } else {
             throw new IllegalStateException("Unable to pay for order");
