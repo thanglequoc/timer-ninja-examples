@@ -7,7 +7,6 @@ public class Receipt {
     private String orderID;
     private int paymentAmount;
     private String customerName;
-    private Beverage beverage;
     private String paymentChannel;
 
     public int getPaymentAmount() {
@@ -24,14 +23,6 @@ public class Receipt {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public Beverage getBeverage() {
-        return beverage;
-    }
-
-    public void setBeverage(Beverage beverage) {
-        this.beverage = beverage;
     }
 
     public String getPaymentChannel() {

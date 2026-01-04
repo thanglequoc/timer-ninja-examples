@@ -4,8 +4,6 @@ public class PaymentRequest {
     private PaymentChannel paymentChannel;
     private int amount;
     private String orderId;
-    private String cardNumber;
-    private String cardHolderName;
 
     public PaymentChannel getPaymentChannel() {
         return paymentChannel;

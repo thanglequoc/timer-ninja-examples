@@ -4,12 +4,9 @@ import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.*;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.service.BaristaService;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.service.CoffeeMachineService;
-import io.github.thanglequoc.ninja_coffee_shop_gradle.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BaristaController {
@@ -33,8 +30,9 @@ public class BaristaController {
     }
 
     @PostMapping("/brew")
-    public Beverage makeDrink(@RequestBody OrderRequest orderReq) {
-        return coffeeMachineService.makeDrink(orderReq);
+    public Beverage makeDrink() {
+        OrderRequest currentActiveOrder = baristaService.getActiveOrder();
+        return coffeeMachineService.makeDrink(currentActiveOrder);
     }
 
     @GetMapping("/checkMaterial")
@@ -45,5 +43,24 @@ public class BaristaController {
     @PostMapping("/refillMaterial")
     public MaterialStatus refillMaterials(@RequestBody RefillMaterialRequest refillRequest) {
         return coffeeMachineService.refillMaterial(refillRequest);
+    }
+
+    @GetMapping("/checkRevenue")
+    public int checkRevenue() {
+        return baristaService.getTotalRevenue();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalStateException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(ex.getMessage());
     }
 }

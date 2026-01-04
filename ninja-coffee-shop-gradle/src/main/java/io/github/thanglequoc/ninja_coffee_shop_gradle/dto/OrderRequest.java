@@ -4,7 +4,6 @@ public class OrderRequest {
     private String orderID;
     private int itemId;
     private boolean isHot;
-    private String beanType;
     private int sweetness;
     private String size;
     private String customerName;
@@ -23,14 +22,6 @@ public class OrderRequest {
 
     public void setHot(boolean hot) {
         isHot = hot;
-    }
-
-    public String getBeanType() {
-        return beanType;
-    }
-
-    public void setBeanType(String beanType) {
-        this.beanType = beanType;
     }
 
     public int getSweetness() {

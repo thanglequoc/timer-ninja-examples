@@ -25,6 +25,9 @@ public class BaristaService {
     }
 
     public OrderRequest placeOrder(OrderRequest orderRequest) {
+        if (activeOrder != null) {
+            throw new IllegalStateException("Unable to place new order. Processing current order: " + activeOrder.getOrderID());
+        }
         // Use post-increment so first order id is ORDER-0, then ORDER-1, etc.
         orderRequest.setOrderID(String.format("ORDER-%d", index++));
         this.activeOrder = orderRequest;
@@ -45,8 +48,9 @@ public class BaristaService {
         // Build receipt
         Receipt receipt = new Receipt();
         receipt.setOrderID(activeOrder.getOrderID());
-        receipt.setReceiptID("RCPT-" + UUID.randomUUID().toString());
+        receipt.setReceiptID("RCPT-" + UUID.randomUUID());
         receipt.setPaymentAmount(paymentRequest.getAmount());
+        receipt.setCustomerName(activeOrder.getCustomerName());
 
         switch (paymentRequest.getPaymentChannel()) {
             case CASH -> paid = paymentService.payWithCash(transactionId, paymentRequest.getAmount());
@@ -66,4 +70,14 @@ public class BaristaService {
         }
     }
 
+    public int getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public OrderRequest getActiveOrder() {
+        if (activeOrder == null) {
+            throw new IllegalStateException("There is no active order");
+        }
+        return activeOrder;
+    }
 }
