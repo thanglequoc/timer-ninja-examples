@@ -53,12 +53,16 @@ public class BaristaService {
         String transactionId = UUID.randomUUID().toString();
         boolean paid;
 
+        // Store order info before clearing activeOrder
+        String paidOrderId = activeOrder.getOrderID();
+        String paidCustomerName = activeOrder.getCustomerName();
+
         // Build receipt
         Receipt receipt = new Receipt();
-        receipt.setOrderID(activeOrder.getOrderID());
+        receipt.setOrderID(paidOrderId);
         receipt.setReceiptID("RCPT-" + UUID.randomUUID());
         receipt.setPaymentAmount(paymentRequest.getAmount());
-        receipt.setCustomerName(activeOrder.getCustomerName());
+        receipt.setCustomerName(paidCustomerName);
 
         switch (paymentRequest.getPaymentChannel()) {
             case CASH -> paid = paymentService.payWithCash(transactionId, paymentRequest.getAmount());
@@ -72,7 +76,7 @@ public class BaristaService {
             this.totalRevenue += paymentRequest.getAmount();
             // Clear active order
             this.activeOrder = null;
-            LOGGER.info("Order {} has been paid successfully: paymentChannel - {}, amount - {} ", activeOrder.getOrderID(), paymentRequest.getPaymentChannel(), paymentRequest.getAmount());
+            LOGGER.info("Order {} has been paid successfully: paymentChannel - {}, amount - {} ", paidOrderId, paymentRequest.getPaymentChannel(), paymentRequest.getAmount());
             return receipt;
         } else {
             throw new IllegalStateException("Unable to pay for order");
