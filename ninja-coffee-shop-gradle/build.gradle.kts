@@ -27,6 +27,9 @@ dependencies {
 
 	implementation(group = "io.github.thanglequoc", name = "timer-ninja", version = "1.2.0")
 	aspect("io.github.thanglequoc:timer-ninja:1.2.0")
+
+	// Enable this if you want to track method in Test classes
+	testAspect("io.github.thanglequoc:timer-ninja:1.2.0")
 }
 
 tasks.withType<Test> {

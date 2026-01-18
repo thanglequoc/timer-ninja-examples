@@ -3,6 +3,8 @@ package io.github.thanglequoc.ninja_coffee_shop_gradle.service;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.OrderRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.PaymentRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.Receipt;
+import io.github.thanglequoc.timerninja.TimerNinjaTracker;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,6 +28,7 @@ class BaristaServiceTest {
     }
 
     @Test
+    @TimerNinjaTracker
     void testPlaceOrderSetsActiveOrder() {
         OrderRequest order = new OrderRequest();
         baristaService.placeOrder(order);
