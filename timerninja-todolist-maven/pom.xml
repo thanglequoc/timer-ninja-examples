@@ -15,6 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
+        <aspectj.version>1.9.25</aspectj.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -26,32 +27,39 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>1.9.7</version>
+            <!-- AspectJ runtime version, in sync with compiler -->
+            <version>${aspectj.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.github.thanglequoc</groupId>
 			<artifactId>timer-ninja</artifactId>
-			<version>1.0.1</version>
+			<version>1.2.0</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!-- Codehaus Maven plugin -->
+			<!-- Codehaus Maven plugin (forked and up-to-date)
+			  https://github.com/dev-aspectj/aspectj-maven-plugin
+			 -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.14.0</version>
+                <groupId>dev.aspectj</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.14.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <!-- AspectJ compiler version, in sync with runtime -->
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
 				<configuration>
-					<complianceLevel>11</complianceLevel>
-					<source>11</source>
-					<target>11</target>
+					<complianceLevel>${java.version}</complianceLevel>
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>io.github.thanglequoc</groupId>
@@ -60,11 +68,12 @@
 					</aspectLibraries>
 				</configuration>
 				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
 				</executions>
 			</plugin>
 		</plugins>
