@@ -1,0 +1,142 @@
+{
+  "info": {
+    "_postman_id": "a3bd5229-c8ce-465d-bf6f-63ad007a64ec",
+    "name": "Timer-Ninja Coffeeshop",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1168916"
+  },
+  "item": [
+    {
+      "name": "Place Order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"itemId\": 2,\n    \"isHot\": false,\n    \"sweetness\": 3,\n    \"size\": \"s\",\n    \"customerName\": \"thanglequoc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/order",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "order"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Brew coffee",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/brew",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "brew"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pay",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"orderId\": \"ORDER-0\",\n    \"paymentChannel\": \"CASH\",\n    \"amount\": 12\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/pay",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pay"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Check material",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"itemId\": 2,\n    \"isHot\": false,\n    \"beanType\": \"arabica\",\n    \"sweetness\": 3,\n    \"size\": \"s\",\n    \"customerName\": \"thanglequoc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/checkMaterial",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "checkMaterial"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Check revenue",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"itemId\": 2,\n    \"isHot\": false,\n    \"beanType\": \"arabica\",\n    \"sweetness\": 3,\n    \"size\": \"s\",\n    \"customerName\": \"thanglequoc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/checkRevenue",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "checkRevenue"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
