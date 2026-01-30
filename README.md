@@ -4,15 +4,15 @@ Example projects integrated with [Timer Ninja library](https://github.com/thangl
 At the end of the guide, you will be able to see the execution time it took for every method annotated with `@TimerNinjaTracker` annotation.
 
 ```shell
-2023-04-07T14:24:17.158+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          : Timer Ninja trace context id: f98a88d7-78ea-4a44-9fef-b5756ae10ba8
-2023-04-07T14:24:17.161+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          : Trace timestamp: 2023-04-07T07:24:16.335Z
-2023-04-07T14:24:17.161+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          : {===== Start of trace context id: f98a88d7-78ea-4a44-9fef-b5756ae10ba8 =====}
-2023-04-07T14:24:17.165+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          : public User createNewUser(User user) - 820 ms
-2023-04-07T14:24:17.165+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          :   |-- private void validateUserAlreadyExist(String username) - 507000 µs
-2023-04-07T14:24:17.165+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          :     |-- public User getUserByName(String username) - 0 ms
-2023-04-07T14:24:17.165+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          :   |-- private static boolean isValidUserName(String username) - 9 ms
-2023-04-07T14:24:17.165+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          :   |-- public User createUser(User user) - 302 ms
-2023-04-07T14:24:17.166+07:00  INFO 28903 --- [nio-8080-exec-2] c.g.t.timerninja.TimerNinjaUtil          : {====== End of trace context id: f98a88d7-78ea-4a44-9fef-b5756ae10ba8 ======}
+2026-01-30T22:34:48.770+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          : Timer Ninja trace context id: 1237dd33-587e-451b-9442-139755fdbe13 | Trace timestamp: 2026-01-30T15:34:44.763Z
+2026-01-30T22:34:48.770+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          : {===== Start of trace context id: 1237dd33-587e-451b-9442-139755fdbe13 =====}
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          : public Beverage makeDrink() - 4007 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          :   |-- public Beverage makeDrink(OrderRequest order) - Args: [order={OrderRequest{orderID='ORDER-0', itemId=1, isHot=false, sweetness=3, size='s', customerName='thanglequoc'}}] - 4007 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          :     |-- public Beverage getDrinkType(int id) - 0 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          :     |-- public void makeIce() - 2001 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          :     |-- public void consumeIceServings(int amount) - Args: [amount={1}] - 0 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          :     |-- public void grindBeans() - 2005 ms
+2026-01-30T22:34:48.771+07:00  INFO 74425 --- [ninja-coffee-shop-gradle] [nio-8080-exec-3] i.g.t.timerninja.TimerNinjaUtil          : {====== End of trace context id: 1237dd33-587e-451b-9442-139755fdbe13 ======}
 ```
 
 

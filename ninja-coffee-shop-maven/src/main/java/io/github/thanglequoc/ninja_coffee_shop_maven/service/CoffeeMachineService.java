@@ -23,6 +23,7 @@ public class CoffeeMachineService {
     private int hotWaterServing = 0;
     private int waterServing = 30;
 
+    @TimerNinjaTracker
     public Beverage getDrinkType(int id) {
         return switch (id) {
             case 1 -> new Americano();
@@ -80,6 +81,7 @@ public class CoffeeMachineService {
         return beverage;
     }
 
+    @TimerNinjaTracker
     public void grindBeans() {
         if (coffeeBeans <= 0) {
             LOGGER.error("Unable to grind any beans - no coffee beans available");
@@ -96,6 +98,7 @@ public class CoffeeMachineService {
         coffeePowderServing += 5;
     }
 
+    @TimerNinjaTracker
     public void heatingWater() {
         LOGGER.info("Heating water...");
         try {
@@ -106,6 +109,7 @@ public class CoffeeMachineService {
         hotWaterServing += 5;
     }
 
+    @TimerNinjaTracker
     public void makeIce() {
         LOGGER.info("Making ice...");
         try {

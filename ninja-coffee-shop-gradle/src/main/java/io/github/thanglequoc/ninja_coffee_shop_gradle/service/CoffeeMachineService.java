@@ -8,6 +8,9 @@ import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Cappuccino;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.model.beverage.Latte;
 import io.github.thanglequoc.timerninja.TimerNinjaTracker;
+
+import java.time.temporal.ChronoUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class CoffeeMachineService {
     private int hotWaterServing = 0;
     private int waterServing = 30;
 
+    @TimerNinjaTracker
     public Beverage getDrinkType(int id) {
         return switch (id) {
             case 1 -> new Americano();
@@ -86,6 +90,7 @@ public class CoffeeMachineService {
         return beverage;
     }
 
+    @TimerNinjaTracker
     public void grindBeans() {
         if (coffeeBeans <= 0) {
             LOGGER.error("Unable to grind any beans - no coffee beans available");
@@ -108,6 +113,7 @@ public class CoffeeMachineService {
         LOGGER.info("Grinding complete. Beans left: {}, Powder servings: {}", coffeeBeans, coffeePowderServing);
     }
 
+    @TimerNinjaTracker
     public void heatingWater() {
         if (waterServing <= 0) {
             throw new IllegalStateException("No water available");
@@ -125,6 +131,7 @@ public class CoffeeMachineService {
         LOGGER.info("Boiling water complete. Hot water servings: {}", hotWaterServing);
     }
 
+    @TimerNinjaTracker
     public void makeIce() {
         if (waterServing <= 0) {
             throw new IllegalStateException("No water available");
@@ -143,6 +150,7 @@ public class CoffeeMachineService {
     }
 
     // Explicit consumers for flexibility / tests
+    @TimerNinjaTracker(includeArgs = true)
     public void consumeIceServings(int amount) {
         if (amount <= 0) return;
         if (iceServing < amount) {
@@ -153,6 +161,7 @@ public class CoffeeMachineService {
         LOGGER.info("Consumed {} ice servings. Remaining ice servings: {}", amount, iceServing);
     }
 
+    @TimerNinjaTracker(includeArgs = true)
     public void consumeHotWaterServings(int amount) {
         if (amount <= 0) return;
         if (hotWaterServing < amount) {
@@ -180,7 +189,15 @@ public class CoffeeMachineService {
         return status;
     }
 
+    @TimerNinjaTracker(includeArgs = true, threshold = 100, timeUnit = ChronoUnit.MILLIS)
     public MaterialStatus refillMaterial(RefillMaterialRequest refillMaterialRequest) {
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
         coffeeBeans += refillMaterialRequest.getCoffeeBeans();
         servingCup += refillMaterialRequest.getServingCups();
         waterServing += refillMaterialRequest.getWaterServings();
