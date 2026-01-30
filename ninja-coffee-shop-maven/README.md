@@ -1,6 +1,6 @@
-# Ninja Coffee Shop Plain Java
+# Ninja Coffee Shop Maven
 
-This project demonstrates a simple coffee shop backend using plain Java and Maven, integrated with the Timer Ninja library.
+This project demonstrates a simple coffee shop backend using Java and Maven, integrated with the Timer Ninja library.
 
 ## How to Build and Run
 
@@ -11,7 +11,7 @@ This project demonstrates a simple coffee shop backend using plain Java and Mave
 
 2. **Run the application:**
    ```sh
-   java -cp target/classes io.github.thanglequoc.ninja_coffee_shop_plain.NinjaCoffeeShopPlainApplication
+   ./mvnw spring-boot:run
    ```
    The server will start on port 8080 by default.
 
