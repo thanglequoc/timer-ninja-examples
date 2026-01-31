@@ -15,5 +15,10 @@ This project demonstrates a simple coffee shop backend using Java and Maven, int
    ```
    The server will start on port 8080 by default.
 
+3. **Run the test:**
+```sh
+./mvnw test -X
+```
+
 ## API Usage
 See the main project README for example API usage and recommended flow.

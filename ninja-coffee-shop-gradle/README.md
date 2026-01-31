@@ -19,7 +19,7 @@ This project demonstrates a simple coffee shop backend using Java and Gradle, in
 
 Run all tests with:
 ```sh
-./gradlew test
+./gradlew test --info
 ```
 
 ## API Usage
