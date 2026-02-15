@@ -24,9 +24,14 @@ public class NinjaCoffeeShopGradleApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	@TimerNinjaTracker
 	public void openTheCoffeeShop() {
-		logger.info("Cleaning the coffee shop...");
+		logger.info("Cleaning the coffee shop...", getShopNameBanner());
 		ShopKeepingService shopKeepingService = new ShopKeepingService();
 		shopKeepingService.cleanTheShop();
 		logger.info("Opening the door. The coffee shop is now open!");
+	}
+
+	@TimerNinjaTracker
+	public static String getShopNameBanner() {
+		return "The Timer Ninja Coffee Shop";
 	}
 }

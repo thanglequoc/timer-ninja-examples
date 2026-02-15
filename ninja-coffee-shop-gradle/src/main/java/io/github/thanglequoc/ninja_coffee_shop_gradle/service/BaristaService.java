@@ -3,6 +3,7 @@ package io.github.thanglequoc.ninja_coffee_shop_gradle.service;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.OrderRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.PaymentRequest;
 import io.github.thanglequoc.ninja_coffee_shop_gradle.dto.Receipt;
+import io.github.thanglequoc.timerninja.TimerNinjaBlock;
 import io.github.thanglequoc.timerninja.TimerNinjaTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,12 @@ public class BaristaService {
             throw new IllegalStateException("Unable to place new order. Processing current order: " + activeOrder.getOrderID());
         }
 
-        String orderID = generateOrderID();
-        // Use post-increment so first order id is ORDER-0, then ORDER-1, etc.
-        orderRequest.setOrderID(orderID);
+        TimerNinjaBlock.measure("Generate and set OrderID", () -> {
+            String orderID = TimerNinjaBlock.measure("Generate the OrderID", this::generateOrderID);
+            // Use post-increment so first order id is ORDER-0, then ORDER-1, etc.
+            orderRequest.setOrderID(orderID);
+        });
+
         this.activeOrder = orderRequest;
         LOGGER.info("New order received: {} - Customer: {}", activeOrder.getOrderID(), activeOrder.getCustomerName());
         return activeOrder;
@@ -94,8 +98,6 @@ public class BaristaService {
         return activeOrder;
     }
 
-
-    @TimerNinjaTracker
     private String generateOrderID() {
         /* Gonna take a bit of time ... */
         try {

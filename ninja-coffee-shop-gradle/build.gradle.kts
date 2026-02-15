@@ -9,6 +9,8 @@ group = "io.github.thanglequoc"
 version = "0.0.1-SNAPSHOT"
 description = "Demo project for Spring Boot"
 
+val timerNinjaVersion = "1.3.0"
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
@@ -17,6 +19,7 @@ java {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
@@ -25,11 +28,11 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-	implementation(group = "io.github.thanglequoc", name = "timer-ninja", version = "1.2.0")
-	aspect("io.github.thanglequoc:timer-ninja:1.2.0")
+	implementation(group = "io.github.thanglequoc", name = "timer-ninja", version = timerNinjaVersion)
+	aspect("io.github.thanglequoc:timer-ninja:$timerNinjaVersion")
 
 	// Enable this if you want to track method in Test classes
-	testAspect("io.github.thanglequoc:timer-ninja:1.2.0")
+	testAspect("io.github.thanglequoc:timer-ninja:$timerNinjaVersion")
 }
 
 tasks.withType<Test> {
