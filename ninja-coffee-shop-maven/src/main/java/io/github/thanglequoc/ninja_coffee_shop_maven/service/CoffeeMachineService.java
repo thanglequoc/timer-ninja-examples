@@ -8,6 +8,9 @@ import io.github.thanglequoc.ninja_coffee_shop_maven.model.beverage.Beverage;
 import io.github.thanglequoc.ninja_coffee_shop_maven.model.beverage.Cappuccino;
 import io.github.thanglequoc.ninja_coffee_shop_maven.model.beverage.Latte;
 import io.github.thanglequoc.timerninja.TimerNinjaTracker;
+
+import java.time.temporal.ChronoUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,8 +20,8 @@ public class CoffeeMachineService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoffeeMachineService.class);
     private int servingCup = 10;
-    private int coffeeBeans = 30;
-    private int coffeePowderServing = 0;
+    private int coffeeBeans = 30; // number of whole beans packs/units
+    private int coffeePowderServing = 0; // number of powder servings available
     private int iceServing = 0;
     private int hotWaterServing = 0;
     private int waterServing = 30;
@@ -35,6 +38,7 @@ public class CoffeeMachineService {
 
     @TimerNinjaTracker(includeArgs = true)
     public Beverage makeDrink(OrderRequest order) {
+        // Validate basic supplies
         if (servingCup <= 0) {
             LOGGER.error("No serving cups available");
             throw new IllegalStateException("No serving cups available");
@@ -45,8 +49,10 @@ public class CoffeeMachineService {
         beverage.setSize(order.getSize());
         beverage.setSweetness(order.getSweetness());
 
+        // Deduct a cup
         servingCup -= 1;
 
+        // Manage hot water / ice servings
         if (order.isHot()) {
             if (hotWaterServing <= 0) {
                 heatingWater();
@@ -59,6 +65,7 @@ public class CoffeeMachineService {
             consumeIceServings(1);
         }
 
+        // Ensure we have coffee powder; grind if necessary
         if (coffeePowderServing <= 0) {
             if (coffeeBeans > 0) {
                 try {
@@ -73,6 +80,7 @@ public class CoffeeMachineService {
             }
         }
 
+        // Use one powder serving for this beverage
         coffeePowderServing -= 1;
 
         LOGGER.info("Prepared beverage: {} (size={}, hot={}, sweetness={}). Remaining - cups: {}, powder: {}, beans: {}, ice: {}, hotWater: {}",
@@ -89,52 +97,88 @@ public class CoffeeMachineService {
         }
 
         LOGGER.info("Grinding some bean to make coffee powders...");
+        // Simulate grinding time
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
+
+        // Update internal state: consume one bean unit to produce powder servings
         coffeeBeans -= 1;
-        coffeePowderServing += 5;
+        // assume each bean unit produces 2 powder servings
+        coffeePowderServing += 2;
+        LOGGER.info("Grinding complete. Beans left: {}, Powder servings: {}", coffeeBeans, coffeePowderServing);
     }
 
     @TimerNinjaTracker
     public void heatingWater() {
+        if (waterServing <= 0) {
+            throw new IllegalStateException("No water available");
+        }
+
         LOGGER.info("Heating water...");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
         hotWaterServing += 5;
+        waterServing -= 1;
+        LOGGER.info("Boiling water complete. Hot water servings: {}", hotWaterServing);
     }
 
     @TimerNinjaTracker
     public void makeIce() {
-        LOGGER.info("Making ice...");
+        if (waterServing <= 0) {
+            throw new IllegalStateException("No water available");
+        }
+
+        LOGGER.info("Making some ice...");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
         iceServing += 5;
+        waterServing -= 1;
+        LOGGER.info("Making ice complete. Ice Serving: {}", iceServing);
     }
 
-    public void consumeHotWaterServings(int amount) {
-        if (hotWaterServing < amount) {
-            throw new IllegalStateException("Not enough hot water servings");
-        }
-        hotWaterServing -= amount;
-    }
-
+    // Explicit consumers for flexibility / tests
+    @TimerNinjaTracker(includeArgs = true)
     public void consumeIceServings(int amount) {
+        if (amount <= 0) return;
         if (iceServing < amount) {
-            throw new IllegalStateException("Not enough ice servings");
+            LOGGER.error("Not enough ice servings: requested {}, available {}", amount, iceServing);
+            throw new IllegalStateException("Not enough ice servings available");
         }
         iceServing -= amount;
+        LOGGER.info("Consumed {} ice servings. Remaining ice servings: {}", amount, iceServing);
+    }
+
+    @TimerNinjaTracker(includeArgs = true)
+    public void consumeHotWaterServings(int amount) {
+        if (amount <= 0) return;
+        if (hotWaterServing < amount) {
+            LOGGER.error("Not enough hot water servings: requested {}, available {}", amount, hotWaterServing);
+            throw new IllegalStateException("Not enough hot water servings available");
+        }
+        hotWaterServing -= amount;
+        LOGGER.info("Consumed {} hot water servings. Remaining hot water servings: {}", amount, hotWaterServing);
     }
 
     public MaterialStatus getMaterialStatus() {
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
         MaterialStatus status = new MaterialStatus();
         status.setCoffeeBeans(coffeeBeans);
         status.setServingCups(servingCup);
@@ -144,10 +188,19 @@ public class CoffeeMachineService {
         return status;
     }
 
-    public MaterialStatus refillMaterial(RefillMaterialRequest refillRequest) {
-        this.coffeeBeans += refillRequest.getCoffeeBeans();
-        this.servingCup += refillRequest.getServingCups();
-        this.waterServing += refillRequest.getWaterServings();
+    @TimerNinjaTracker(includeArgs = true, threshold = 100, timeUnit = ChronoUnit.MILLIS)
+    public MaterialStatus refillMaterial(RefillMaterialRequest refillMaterialRequest) {
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
+        coffeeBeans += refillMaterialRequest.getCoffeeBeans();
+        servingCup += refillMaterialRequest.getServingCups();
+        waterServing += refillMaterialRequest.getWaterServings();
+        LOGGER.info("Refill material completed");
         return getMaterialStatus();
     }
 }
